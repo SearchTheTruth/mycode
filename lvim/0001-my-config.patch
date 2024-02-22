@@ -1,0 +1,87 @@
+From 3f9777c92d6402da3affb80db5b9e657b2521902 Mon Sep 17 00:00:00 2001
+From: jianghao <jianghao3@lixiang.com>
+Date: Thu, 22 Feb 2024 20:05:13 +0800
+Subject: [PATCH] my config
+
+---
+ lua/lvim/core/project.lua   | 4 ++--
+ lua/lvim/core/telescope.lua | 8 ++++++--
+ lua/lvim/core/which-key.lua | 1 +
+ lua/lvim/lsp/config.lua     | 3 ++-
+ 4 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/lua/lvim/core/project.lua b/lua/lvim/core/project.lua
+index 17473c55..4510a3f8 100644
+--- a/lua/lvim/core/project.lua
++++ b/lua/lvim/core/project.lua
+@@ -11,7 +11,7 @@ function M.config()
+     ---@usage set to true to disable setting the current-woriking directory
+     --- Manual mode doesn't automatically change your root directory, so you have
+     --- the option to manually do so using `:ProjectRoot` command.
+-    manual_mode = false,
++    manual_mode = true,
+ 
+     ---@usage Methods of detecting the root directory
+     --- Allowed values: **"lsp"** uses the native neovim lsp
+@@ -23,7 +23,7 @@ function M.config()
+ 
+     -- All the patterns used to detect root dir, when **"pattern"** is in
+     -- detection_methods
+-    patterns = { ".git", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "pom.xml" },
++    patterns = { ".git", "cscope.out", "_darcs", ".hg", ".bzr", ".svn", "Makefile", "package.json", "pom.xml" },
+ 
+     -- Table of lsp clients to ignore by name
+     -- eg: { "efm", ... }
+diff --git a/lua/lvim/core/telescope.lua b/lua/lvim/core/telescope.lua
+index b701f7e4..5aad7e91 100644
+--- a/lua/lvim/core/telescope.lua
++++ b/lua/lvim/core/telescope.lua
+@@ -56,13 +56,17 @@ function M.config()
+           end,
+         },
+       },
+-      file_ignore_patterns = {},
+-      path_display = { "smart" },
++      file_ignore_patterns = {".clangd", ".cache", "cscope*"},
++      -- path_display = { "smart" },
+       winblend = 0,
+       border = {},
+       borderchars = nil,
+       color_devicons = true,
+       set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
++      -- use fd to "find files" and return absolute paths
++    	find_command = { "fd", "-t=f", "-a" },
++	    path_display = { "absolute" },
++      wrap_results = true
+     },
+     pickers = {
+       find_files = {
+diff --git a/lua/lvim/core/which-key.lua b/lua/lvim/core/which-key.lua
+index 2ab47b05..bd86b6f1 100644
+--- a/lua/lvim/core/which-key.lua
++++ b/lua/lvim/core/which-key.lua
+@@ -292,6 +292,7 @@ M.config = function()
+         k = { "<cmd>Telescope keymaps<cr>", "Keymaps" },
+         C = { "<cmd>Telescope commands<cr>", "Commands" },
+         l = { "<cmd>Telescope resume<cr>", "Resume last search" },
++        w = { "<cmd>Telescope grep_string<cr>", "Grep string" },
+         p = {
+           "<cmd>lua require('telescope.builtin').colorscheme({enable_preview = true})<cr>",
+           "Colorscheme with Preview",
+diff --git a/lua/lvim/lsp/config.lua b/lua/lvim/lsp/config.lua
+index 145358a1..0644753c 100644
+--- a/lua/lvim/lsp/config.lua
++++ b/lua/lvim/lsp/config.lua
+@@ -75,7 +75,8 @@ return {
+       ["K"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Show hover" },
+       ["gd"] = { "<cmd>lua vim.lsp.buf.definition()<cr>", "Goto definition" },
+       ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "Goto Declaration" },
+-      ["gr"] = { "<cmd>lua vim.lsp.buf.references()<cr>", "Goto references" },
++      -- ["gr"] = { "<cmd>lua vim.lsp.buf.references()<cr>", "Goto references" },
++      ["gr"] = { "<cmd>Telescope lsp_references<cr>", "Goto references" },
+       ["gI"] = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "Goto Implementation" },
+       ["gs"] = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Show signature help" },
+       ["gl"] = {
+-- 
+2.25.1
+
